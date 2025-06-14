@@ -1,3 +1,4 @@
+// shared/build.gradle.kts - 修正後
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
@@ -7,7 +8,10 @@ plugins {
 kotlin {
     androidTarget()
 
-    jvm("desktop")
+    // desktopターゲットにJVMツールチェインを明示的に設定
+    jvm("desktop") {
+        jvmToolchain(21) // sharedモジュールのdesktopターゲットはJDK 21を使用
+    }
 
     listOf(
         iosX64(),
@@ -52,6 +56,8 @@ kotlin {
             }
         }
     }
+    // 注意: モジュール全体のjvmToolchainは設定しない (Androidの17と競合するため)
+    // jvmToolchain(21) // この行は削除またはコメントアウトしたままにします
 }
 
 android {
@@ -66,10 +72,12 @@ android {
         minSdk = (findProperty("android.minSdk") as String).toInt()
     }
     compileOptions {
+        // AndroidのコンパイルオプションはJava 17のまま維持
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlin {
+        // AndroidのKotlinコンパイルはJava 17を維持
         jvmToolchain(17)
     }
 }

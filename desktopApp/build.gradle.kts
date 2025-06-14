@@ -1,3 +1,4 @@
+// desktopApp/build.gradle.kts - 修正後
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -5,9 +6,17 @@ plugins {
     id("org.jetbrains.compose")
 }
 
+// ★★★ ここから追加 ★★★
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21)) // Java 21 を指定
+    }
+}
+// ★★★ ここまで追加 ★★★
+
 kotlin {
     jvm {
-        withJava() // ★★★ これを追加！ ★★★
+        withJava()
     }
     sourceSets {
         val jvmMain by getting  {
@@ -17,6 +26,9 @@ kotlin {
             }
         }
     }
+    // ★★★ ここから追加 ★★★
+    jvmToolchain(21) // KotlinもJava 21 に合わせる
+    // ★★★ ここまで追加 ★★★
 }
 
 compose.desktop {
